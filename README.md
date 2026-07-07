@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# frontend
 
-## Getting Started
+Next.js (App Router) frontend for the Project Cost Control dashboard: a single login screen guarding a sidebar + dashboard shell. Authentication is delegated to the NestJS API in `../api-cost-control` (httpOnly JWT cookie). The dashboard page currently renders mock data shaped like a real cost-control API response, so swapping in real data later only touches one function.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 18+
+- The `api-cost-control` API running locally (this app calls it for login/session checks)
+
+## Setup
+
+```bash
+npm install
+cp .env.local.example .env.local
+```
+
+### Environment variables
+
+| Variable | Description |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Base URL of the NestJS API. Default `http://localhost:3001`. Used both client-side (login form) and server-side (auth check in the dashboard layout). |
+
+## Running
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App runs on `http://localhost:3000`. Start `api-cost-control` first — every dashboard page load checks the session against it.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Folder structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+src/
+  app/
+    page.tsx                 # "/" -> redirects to /dashboard
+    login/page.tsx           # "/login" - public, renders LoginForm
+    (dashboard)/              # route group: everything behind auth
+      layout.tsx               # checks session (getMe), renders Sidebar + page
+      dashboard/page.tsx        # "/dashboard" - the cost control mockup page
+  proxy.ts                    # cheap "is there a session cookie" redirect for /dashboard/* (Next.js 16 proxy convention, formerly "middleware")
+  features/
+    auth/LoginForm.tsx        # client-side login form
+    dashboard/mockData.ts     # MOCK_DASHBOARD_DATA + getDashboardData()
+  components/
+    layout/                   # Sidebar, SidebarNavItem
+    dashboard/                # DashboardHeader, KpiTree, KpiBox, CostTable
+    ui/                       # LogoutButton, etc.
+  lib/api/
+    client.ts                # low-level fetch wrapper (credentials, JSON, ApiError)
+    auth.ts                  # login()/logout()/getCurrentUser() - browser-callable
+    server.ts                # getMe() - server-only, forwards the session cookie to the API
+  types/                     # auth.ts, dashboard.ts
+```
 
-## Learn More
+## Auth flow
 
-To learn more about Next.js, take a look at the following resources:
+1. `/login` renders `LoginForm`, which posts to the API's `/auth/login` with `credentials: 'include'`. On success the API sets the `cc_token` httpOnly cookie and the form redirects to `/dashboard`.
+2. `proxy.ts` guards `/dashboard/:path*`: if the `cc_token` cookie is simply *absent*, it redirects to `/login` before any rendering happens. This is a cheap presence check only — it does not verify the JWT (avoids JWT verification/network calls inside edge proxy).
+3. The real check happens in `app/(dashboard)/layout.tsx`, a server component that calls `getMe()` (`lib/api/server.ts`). That function reads the `cc_token` cookie via `next/headers` and forwards it to the API's `GET /auth/me`, which verifies the JWT's signature and expiry. If that fails, the layout redirects to `/login`; otherwise it renders the `Sidebar` and the page.
+4. `LogoutButton` calls `POST /auth/logout` (clears the cookie) and navigates back to `/login`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Adding a new sidebar item
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Edit the `NAV_ITEMS` array in `src/components/layout/Sidebar.tsx` — add `{ href, label, icon }` (icon from `lucide-react`). `SidebarNavItem` handles the active-route highlighting automatically.
 
-## Deploy on Vercel
+## Dashboard data
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+`src/features/dashboard/mockData.ts` exports `getDashboardData()`, an `async` function that currently just returns a hardcoded `DashboardData` object (see `src/types/dashboard.ts` for the shape: project header info, two KPI trees, and the cost breakdown table sections). It's declared `async` on purpose — when a real cost-control API endpoint exists, replace the function body with a `fetch` call; no caller (`app/(dashboard)/dashboard/page.tsx`) needs to change.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The KPI "tree" boxes and connector lines are a simplified visual approximation of the source spreadsheet layout (flex/grid + colored boxes), not pixel-perfect tree connectors.
