@@ -53,7 +53,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 13,116,131\n▲ PROFIT 35%",
         tone: "green",
       },
-      row3: { pvTotal: 37_430_103, pwoTotal: 24_377_944, pwoOpResultWithOH: 63_972 },
+      row3: { pvTotal: 37_430_103, pwoTotal: 24_377_944, pwoOpResultWithOH: 63_972, variant: "left" },
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -71,7 +71,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 63,972\n▲ PROFIT +0%",
         tone: "green",
       },
-      row3: { pvTotal: 37_430_103, pwoTotal: 24_377_944, pwoOpResultWithOH: 63_972 },
+      row3: { pvTotal: 37_430_103, pwoTotal: 24_377_944, pwoOpResultWithOH: 63_972, variant: "right" },
     },
     costTable: [
       {
@@ -143,7 +143,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 22,230,000\n▲ PROFIT 42%",
         tone: "green",
       },
-      row3: { pvTotal: 52_180_000, pwoTotal: 31_500_000, pwoOpResultWithOH: 1_550_000 },
+      row3: { pvTotal: 52_180_000, pwoTotal: 31_500_000, pwoOpResultWithOH: 1_550_000, variant: "left" },
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -161,7 +161,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 1,550,000\n▲ PROFIT +5%",
         tone: "green",
       },
-      row3: { pvTotal: 52_180_000, pwoTotal: 31_500_000, pwoOpResultWithOH: 1_550_000 },
+      row3: { pvTotal: 52_180_000, pwoTotal: 31_500_000, pwoOpResultWithOH: 1_550_000, variant: "right" },
     },
     costTable: [
       {
@@ -233,7 +233,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 5,150,000\n▲ PROFIT 27%",
         tone: "green",
       },
-      row3: { pvTotal: 19_250_000, pwoTotal: 14_800_000, pwoOpResultWithOH: 700_000 },
+      row3: { pvTotal: 19_250_000, pwoTotal: 14_800_000, pwoOpResultWithOH: 700_000, variant: "left" },
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -251,7 +251,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 700,000\n▲ PROFIT +5%",
         tone: "red",
       },
-      row3: { pvTotal: 19_250_000, pwoTotal: 14_800_000, pwoOpResultWithOH: 700_000 },
+      row3: { pvTotal: 19_250_000, pwoTotal: 14_800_000, pwoOpResultWithOH: 700_000, variant: "right" },
     },
     costTable: [
       {

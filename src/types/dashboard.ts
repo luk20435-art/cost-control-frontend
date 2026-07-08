@@ -10,6 +10,7 @@ export interface KpiTreeRow3 {
   pvTotal: number;
   pwoTotal: number;
   pwoOpResultWithOH: number;
+  variant: "left" | "right";
 }
 
 export interface ProjectKpiTree {
