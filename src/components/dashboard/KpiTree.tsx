@@ -1,5 +1,6 @@
 import type { ProjectKpiTree } from "@/types/dashboard";
 import { KpiBox } from "./KpiBox";
+import { KpiRow3 } from "./KpiRow3";
 
 interface KpiTreeProps {
   tree: ProjectKpiTree;
@@ -26,12 +27,7 @@ export function KpiTree({ tree }: KpiTreeProps) {
         <KpiBox {...tree.operatingResult} />
         <KpiBox {...tree.operationCostWithOH} />
         <KpiBox {...tree.operatingResultWithOH} />
-        {tree.abovePwo && tree.abovePwoResult && (
-          <>
-            <KpiBox {...tree.abovePwo} />
-            <KpiBox {...tree.abovePwoResult} />
-          </>
-        )}
+        {tree.row3 && <KpiRow3 data={tree.row3} />}
       </div>
     </div>
   );

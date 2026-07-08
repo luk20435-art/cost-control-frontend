@@ -6,6 +6,12 @@ export interface KpiBoxData {
   tone: KpiTone;
 }
 
+export interface KpiTreeRow3 {
+  pvTotal: number;
+  pwoTotal: number;
+  pwoOpResultWithOH: number;
+}
+
 export interface ProjectKpiTree {
   title: string;
   totalValue: string;
@@ -14,8 +20,7 @@ export interface ProjectKpiTree {
   operatingResult: KpiBoxData;
   operationCostWithOH: KpiBoxData;
   operatingResultWithOH: KpiBoxData;
-  abovePwo?: KpiBoxData;
-  abovePwoResult?: KpiBoxData;
+  row3?: KpiTreeRow3;
 }
 
 export interface CostTableRow {
