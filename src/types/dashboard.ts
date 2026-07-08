@@ -14,6 +14,8 @@ export interface ProjectKpiTree {
   operatingResult: KpiBoxData;
   operationCostWithOH: KpiBoxData;
   operatingResultWithOH: KpiBoxData;
+  abovePwo?: KpiBoxData;
+  abovePwoResult?: KpiBoxData;
 }
 
 export interface CostTableRow {

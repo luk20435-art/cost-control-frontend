@@ -1,4 +1,31 @@
-import type { BudgetUsageCategory, DashboardData } from "@/types/dashboard";
+import type { BudgetUsageCategory, DashboardData, KpiBoxData } from "@/types/dashboard";
+
+function fmt(n: number): string {
+  return n.toLocaleString("en-US");
+}
+
+function buildRow3(
+  pvTotal: number,
+  pwoTotal: number,
+  pwoOpResultWithOH: number,
+): { abovePwo: KpiBoxData; abovePwoResult: KpiBoxData } {
+  const diff = pvTotal - pwoTotal;
+  const combined = diff + pwoOpResultWithOH;
+  const profitPct = Math.round((combined / pvTotal) * 100);
+
+  return {
+    abovePwo: {
+      label: "PROJECT VALUE - PWO BUDGET",
+      value: `+ ${fmt(diff)}`,
+      tone: "blue",
+    },
+    abovePwoResult: {
+      label: "OPERATING RESULT",
+      value: `+ ${fmt(combined)}\n▲ PROFIT ${profitPct}%`,
+      tone: "green",
+    },
+  };
+}
 
 function buildCategory(
   label: string,
@@ -53,6 +80,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 13,116,131\n▲ PROFIT 35%",
         tone: "green",
       },
+      ...buildRow3(37_430_103, 24_377_944, 63_972),
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -70,6 +98,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 63,972\n▲ PROFIT +0%",
         tone: "green",
       },
+      ...buildRow3(37_430_103, 24_377_944, 63_972),
     },
     costTable: [
       {
@@ -141,6 +170,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 22,230,000\n▲ PROFIT 42%",
         tone: "green",
       },
+      ...buildRow3(52_180_000, 31_500_000, 1_550_000),
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -158,6 +188,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 1,550,000\n▲ PROFIT +5%",
         tone: "green",
       },
+      ...buildRow3(52_180_000, 31_500_000, 1_550_000),
     },
     costTable: [
       {
@@ -229,6 +260,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 5,150,000\n▲ PROFIT 27%",
         tone: "green",
       },
+      ...buildRow3(19_250_000, 14_800_000, 700_000),
     },
     pwoBudgetTree: {
       title: "PWO Budget",
@@ -246,6 +278,7 @@ export const MOCK_PROJECTS: DashboardData[] = [
         value: "+ 700,000\n▲ PROFIT +5%",
         tone: "red",
       },
+      ...buildRow3(19_250_000, 14_800_000, 700_000),
     },
     costTable: [
       {

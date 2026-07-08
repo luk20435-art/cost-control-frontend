@@ -26,6 +26,12 @@ export function KpiTree({ tree }: KpiTreeProps) {
         <KpiBox {...tree.operatingResult} />
         <KpiBox {...tree.operationCostWithOH} />
         <KpiBox {...tree.operatingResultWithOH} />
+        {tree.abovePwo && tree.abovePwoResult && (
+          <>
+            <KpiBox {...tree.abovePwo} />
+            <KpiBox {...tree.abovePwoResult} />
+          </>
+        )}
       </div>
     </div>
   );
